@@ -1,12 +1,13 @@
-const axios = require('axios');
 const chai = require('chai');
 const chaiJsonSchema = require('chai-json-schema');
+const supertest = require('supertest');
 
 chai.use(chaiJsonSchema);
 
 const { expect } = chai;
 
 const BASE_URL = 'https://reqres.in/api';
+const request = supertest(BASE_URL);
 
 // Schema Definitions
 const userSchema = {
@@ -37,9 +38,9 @@ const userSchema = {
 
 describe('Reqres API Automation Tests', () => {
   it('Sample GET Request', async () => {
-    const response = await axios.get(`${BASE_URL}/users/2`);
+    const response = await request.get('/users/2');
     expect(response.status).to.equal(200);
-    expect(response.data).to.be.jsonSchema(userSchema); // Menggunakan chai-json-schema di sini
+    expect(response.body).to.be.jsonSchema(userSchema); // Using chai-json-schema here
   });
 
   it('Sample POST Request', async () => {
@@ -47,14 +48,14 @@ describe('Reqres API Automation Tests', () => {
       name: "morpheus",
       job: "leader"
     };
-    const response = await axios.post(`${BASE_URL}/users`, payload);
+    const response = await request.post('/users').send(payload);
     expect(response.status).to.equal(201);
-    expect(response.data).to.have.property('name', 'morpheus');
-    expect(response.data).to.have.property('job', 'leader');
+    expect(response.body).to.have.property('name', 'morpheus');
+    expect(response.body).to.have.property('job', 'leader');
   });
 
   it('Sample DELETE Request', async () => {
-    const response = await axios.delete(`${BASE_URL}/users/2`);
+    const response = await request.delete('/users/2');
     expect(response.status).to.equal(204);
   });
 
@@ -63,9 +64,9 @@ describe('Reqres API Automation Tests', () => {
       name: "morpheus",
       job: "zion resident"
     };
-    const response = await axios.put(`${BASE_URL}/users/2`, payload);
+    const response = await request.put('/users/2').send(payload);
     expect(response.status).to.equal(200);
-    expect(response.data).to.have.property('name', 'morpheus');
-    expect(response.data).to.have.property('job', 'zion resident');
+    expect(response.body).to.have.property('name', 'morpheus');
+    expect(response.body).to.have.property('job', 'zion resident');
   });
 });
