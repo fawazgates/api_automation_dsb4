@@ -1,2 +1,1 @@
-Clone my repo
-run supertest : npm run test
+Clone my repo, run supertest : npm run test
